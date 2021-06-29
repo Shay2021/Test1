@@ -1,0 +1,99 @@
+#include<iostream>
+using namespace std;
+const int N = 4;
+float det(int G, double M[N][N]);
+float pod(int k, double M[N][N], double A[N][N], double B[N]);
+void vyvod(double V[N][N]);
+void main()
+{
+	setlocale(LC_ALL, "rus");
+	int i, j;
+	double A[N][N] = { {2,1,-1,2},
+	{3,0,-1,-1},
+	{-4,0,2,-1},
+	{1,1,-1,2} };
+	double B[N] = { 0,-1,1,-2 };
+	//Вывод на экран исходной матрицы
+	cout << "Вывод исходной матрицы\n";
+	vyvod(A);
+	//Нахождение определителя исходной матрицы
+	cout << "Вывод детерминанта исходной матрицы\n";
+	float Op = det(N, A);
+	cout << "Детериминант = " << Op << endl;
+	//действия над новыми матрицами
+	double M1[N][N];
+	float Op1 = pod(0, M1, A, B);
+	cout << "Детериминант 1= " << Op1 << endl;
+	double M2[N][N];
+	float Op2 = pod(1, M2, A, B);
+	cout << "Детериминант2 = " << Op2 << endl;
+	double M3[N][N];
+	float Op3 = pod(2, M3, A, B);
+	cout << "Детериминант3 = " << Op3 << endl;
+	double M4[N][N];
+	float Op4 = pod(3, M4, A, B);
+	cout << "Детериминант4 = " << Op4 << endl;
+	// Вывод решения
+	cout << "\nВывод решения\n";
+	float x1 = Op1 / Op;
+	cout << "X1 = " << x1 << endl;
+	float x2 = Op2 / Op;
+	cout << "X2 = " << x2 << endl;
+	float x3 = Op3 / Op;
+	cout << "X3 = " << x3 << endl;
+	float x4 = Op4 / Op;
+	cout << "X4 = " << x4 << endl;
+	system("pause");
+}
+float det(int G, double M[N][N])
+{
+	if (G == 1)
+		return M[0][0];
+	else
+	{
+		double M1[N][N];
+		float Res = 0;
+		for (int i = 0; i < G; i++)
+		{
+			for (int Y = 1, x = 0; Y < G; Y++, x = 0)
+			{
+				x = 0;
+				for (int X = 0; X < G; X++)
+					if (X != i)
+						M1[Y - 1][x++] = M[Y][X];
+			}
+			if (i % 2 == 0)
+				Res += M[0][i] * det(G - 1, M1);
+			else
+				Res -= M[0][i] * det(G - 1, M1);
+		}
+		return Res;
+	}
+}
+void vyvod(double V[N][N])
+{
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cout << V[i][j] << endl;
+		}
+		cout << endl;
+	}
+}
+//создание матрицы и нахождение  детерминанта 
+float pod(int k, double M[N][N], double A[N][N], double B[N])
+{
+	int i, j;
+	for (i = 0; i < N; i++)
+		for (j = 0; j < N; j++)
+		{
+			M[i][j] = A[i][j];
+		}
+	for (i = 0; i < N; i++)             //подстановка
+	{
+		M[i][k] = B[i];
+	}
+	float Opr = det(N, M);
+	return Opr;
+}
